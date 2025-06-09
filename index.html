@@ -1,161 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>✨ Homework Assignment Portal</title>
-  <!-- MathLive for math keyboard -->
-  <link rel="stylesheet" href="https://unpkg.com/mathlive/dist/mathlive.core.css">
+  <meta charset="UTF-8" />
+  <title>Submit a Homework Question</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://unpkg.com/mathlive/dist/mathlive.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/mathlive/dist/mathlive.core.css">
+
   <style>
     :root {
       --primary: #4f46e5;
-      --secondary: #fbbf24;
-      --background: #f3f4f6;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
+      --background: #f9fafb;
+      --text: #111827;
+      --muted: #9ca3af;
+      --border: #e5e7eb;
       --radius: 8px;
       --spacing: 16px;
     }
-    * { box-sizing: border-box; }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      margin: 0; padding: var(--spacing);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--background);
+      font-family: system-ui, sans-serif;
+      background-color: var(--background);
       color: var(--text);
+      margin: 0;
+      padding: var(--spacing);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
     }
-    h1 { margin-bottom: var(--spacing); text-align: center; color: var(--primary); }
-    .section { margin-bottom: calc(var(--spacing) * 2); }
-    label { display: block; margin-bottom: 6px; font-weight: 600; }
-    input[type=text] {
-      width: 100%; padding: 10px;
-      border: 1px solid var(--muted);
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+      background-color: white;
+      padding: calc(var(--spacing) * 2);
       border-radius: var(--radius);
-      transition: border-color 0.3s;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      margin-top: 40px;
     }
-    input[type=text]:focus { border-color: var(--primary); outline: none; }
+
+    h1 {
+      font-size: 1.75rem;
+      text-align: center;
+      margin-bottom: var(--spacing);
+      color: var(--primary);
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: var(--spacing);
+      font-size: 1rem;
+    }
+
     math-field {
-      width: 100%; height: 3em;
-      border: 1px solid var(--muted);
+      width: 100%;
+      height: 3em;
+      border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 8px;
-      transition: border-color 0.3s;
-      background: #fafafa;
+      background-color: #f3f4f6;
+      margin-bottom: var(--spacing);
     }
-    math-field:focus-within { border-color: var(--primary); }
+
     button {
-      padding: 12px 24px;
-      font-size: 1em;
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      background-color: var(--primary);
+      color: white;
       border: none;
       border-radius: var(--radius);
       cursor: pointer;
-      transition: transform 0.2s, background 0.3s;
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: background 0.2s ease;
     }
+
     button:hover {
-      transform: translateY(-2px);
-      background: #4338ca;
+      background-color: #4338ca;
     }
-    button:active { transform: translateY(0); }
-    #assignStatus {
-      margin-top: 8px;
+
+    #statusMsg {
+      text-align: center;
+      margin-top: var(--spacing);
       font-weight: 500;
-      color: var(--secondary);
+      color: var(--primary);
     }
-    #submissionsList { margin-top: var(--spacing); display: grid; gap: var(--spacing); }
-    .submission {
-      background: var(--card);
-      padding: var(--spacing);
-      border-radius: var(--radius);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      transition: transform 0.2s;
-    }
-    .submission:hover { transform: translateY(-2px); }
-    .submission-title { font-weight: 700; color: var(--primary); margin-bottom: 4px; }
-    .submission-line { padding-left: var(--spacing); border-left: 3px solid var(--secondary); margin-bottom: 4px; }
   </style>
 </head>
 <body>
-  <h1>✨ Homework Assignment Portal ✨</h1>
+  <div class="container">
+    <h1>Submit a Homework Question</h1>
 
-  <div class="section" id="assignSection">
-    <h2>Assign a New Problem</h2>
+    <label for="studentId">Student ID</label>
+    <input type="text" id="studentId" placeholder="e.g., student123" />
+
     <label for="titleInput">Problem Title</label>
-    <input type="text" id="titleInput" placeholder="Enter problem title...">
+    <input type="text" id="titleInput" placeholder="e.g., Derivative of x²" />
 
     <label for="problemInput">Problem (LaTeX)</label>
     <math-field id="problemInput" virtual-keyboard-mode="onfocus"></math-field>
 
-    <button id="assignBtn">🚀 Send to Student</button>
-    <p id="assignStatus"></p>
+    <button id="submitBtn">Send to Student</button>
+    <p id="statusMsg"></p>
   </div>
 
-  <div class="section" id="viewSection">
-    <h2>Student Submissions</h2>
-    <button id="refreshBtn" style="background: var(--secondary); color: var(--text);">🔄 Refresh Submissions</button>
-    <div id="submissionsList"></div>
-  </div>
-
-  <script>
-    document.getElementById('assignBtn').addEventListener('click', () => {
-      const title = document.getElementById('titleInput').value.trim();
-      const latex = document.getElementById('problemInput').getValue();
-      if (!title || !latex) {
-        alert('Please fill out both fields!'); return;
-      }
-      assignProblemToServer({ title, latex })
-        .then(() => {
-          const status = document.getElementById('assignStatus');
-          status.textContent = '✔️ Problem sent!';
-          setTimeout(() => status.textContent = '', 3000);
-        })
-        .catch(err => alert('Error: ' + err));
-    });
-
-    document.getElementById('refreshBtn').addEventListener('click', loadSubmissions);
-
-    function displaySubmissions(subs) {
-      const container = document.getElementById('submissionsList');
-      container.innerHTML = '';
-      subs.forEach(sub => {
-        const div = document.createElement('div');
-        div.className = 'submission';
-        const title = document.createElement('div');
-        title.className = 'submission-title';
-        title.textContent = sub.problemTitle;
-        div.appendChild(title);
-        sub.completedLog.forEach(line => {
-          const ln = document.createElement('div');
-          ln.className = 'submission-line';
-          ln.textContent = line;
-          div.appendChild(ln);
-        });
-        container.appendChild(div);
-      });
-    }
-
-    function loadSubmissions() {
-      fetchSubmissionsFromDB()
-        .then(displaySubmissions)
-        .catch(err => alert('Fetch error: ' + err));
-    }
-
-    // Placeholder functions
-    function assignProblemToServer(problem) {
-      return new Promise(resolve => setTimeout(resolve, 500));
-    }
-    function fetchSubmissionsFromDB() {
-      return new Promise(resolve => setTimeout(() => resolve([
-        { problemTitle: 'Quadratic #3', completedLog: ['Step 1:...', 'Step 2:...'] },
-        { problemTitle: 'Derivative of sin(x)', completedLog: ['Step 1:...', 'Step 2:...'] }
-      ]), 500));
-    }
-
-    // Initial load
-    loadSubmissions();
-  </script>
+  <script src="submit.js"></script>
 </body>
 </html>
