@@ -1,0 +1,14 @@
+{
+  "firestore": {
+    "indexes": [
+      {
+        "collectionGroup": "problems",
+        "queryScope": "COLLECTION",
+        "fields": [
+          { "fieldPath": "tutorId",   "order": "ASCENDING" },
+          { "fieldPath": "createdAt", "order": "DESCENDING" }
+        ]
+      }
+    ]
+  }
+}

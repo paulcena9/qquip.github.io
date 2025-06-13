@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /problems/{problemId} {
+      // Anyone (even unauthenticated) can create a new question
+      allow create: if true;
+
+      // Tutors can read only their own questions
+      allow read: if request.auth != null
+                  && request.auth.uid == resource.data.tutorId;
+
+      // Tutors can update only the answerText field on their own docs
+      allow update: if request.auth != null
+                    && request.auth.uid == resource.data.tutorId
+                    // prevent changing tutorId or other fields
+                    && request.resource.data.keys().hasOnly([
+                         'studentId','title','plainText',
+                         'tutorId','createdAt',
+                         'answered','answerText','answeredAt'
+                       ])
+                    && request.resource.data.answerText is string
+                    && request.resource.data.answered == true;
+    }
+  }
+}
