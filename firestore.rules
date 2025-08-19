@@ -2,24 +2,26 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /problems/{problemId} {
-      // Anyone (even unauthenticated) can create a new question
-      allow create: if true;
+      // Only allow your Cloud Function to write
+      allow create, update, delete: if false;
 
-      // Tutors can read only their own questions
-      allow read: if request.auth != null
+      // Tutors may only read their own problems
+      allow read,update,delete: if request.auth != null
                   && request.auth.uid == resource.data.tutorId;
-
-      // Tutors can update only the answerText field on their own docs
-      allow update: if request.auth != null
-                    && request.auth.uid == resource.data.tutorId
-                    // prevent changing tutorId or other fields
-                    && request.resource.data.keys().hasOnly([
-                         'studentId','title','plainText',
-                         'tutorId','createdAt',
-                         'answered','answerText','answeredAt'
-                       ])
-                    && request.resource.data.answerText is string
-                    && request.resource.data.answered == true;
+    }
+    match /lessons/{lessonId} {
+      // Allow a tutor to create a lesson where they are the tutor
+      allow create: if request.auth.uid != null
+                    && request.resource.data.tutorId == request.auth.uid;
+      
+      // Allow the tutor or the target student to read their lessons
+      allow read: if request.auth.uid != null
+                  && (request.auth.uid == resource.data.tutorId
+                      || request.auth.uid == resource.data.studentId);
+      
+      // (Optional) allow updates/deletes by the tutor only
+      allow update, delete: if request.auth.uid == resource.data.tutorId;
     }
   }
+   
 }

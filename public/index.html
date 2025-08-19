@@ -1,80 +1,713 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Homework Portal</title>
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <style>
+    /* =============================================================================
+       QQuip Design System - Autism-Friendly Educational Interface
+       ============================================================================= */
+
+    /* CSS Custom Properties (Design Tokens) */
+    :root {
+      /* Color Palette - Calming and High Contrast for Accessibility */
+      --primary-50: #f0f9ff;
+      --primary-100: #e0f2fe;
+      --primary-200: #bae6fd;
+      --primary-300: #7dd3fc;
+      --primary-400: #38bdf8;
+      --primary-500: #0ea5e9;
+      --primary-600: #0284c7;
+      --primary-700: #0369a1;
+      --primary-800: #075985;
+      --primary-900: #0c4a6e;
+
+      /* Secondary Colors - Warm and Supportive */
+      --secondary-50: #fdf4ff;
+      --secondary-100: #fae8ff;
+      --secondary-200: #f5d0fe;
+      --secondary-300: #f0abfc;
+      --secondary-400: #e879f9;
+      --secondary-500: #d946ef;
+      --secondary-600: #c026d3;
+      --secondary-700: #a21caf;
+      --secondary-800: #86198f;
+      --secondary-900: #701a75;
+
+      /* Success Colors */
+      --success-50: #f0fdf4;
+      --success-500: #22c55e;
+      --success-600: #16a34a;
+
+      /* Warning Colors */
+      --warning-50: #fffbeb;
+      --warning-500: #f59e0b;
+      --warning-600: #d97706;
+
+      /* Error Colors */
+      --error-50: #fef2f2;
+      --error-500: #ef4444;
+      --error-600: #dc2626;
+
+      /* Neutral Colors */
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-400: #94a3b8;
+      --gray-500: #64748b;
+      --gray-600: #475569;
+      --gray-700: #334155;
+      --gray-800: #1e293b;
+      --gray-900: #0f172a;
+
+      /* Typography */
+      --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --font-family-mono: 'JetBrains Mono', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+
+      --font-size-xs: 0.75rem;
+      --font-size-sm: 0.875rem;
+      --font-size-base: 1rem;
+      --font-size-lg: 1.125rem;
+      --font-size-xl: 1.25rem;
+      --font-size-2xl: 1.5rem;
+      --font-size-3xl: 1.875rem;
+      --font-size-4xl: 2.25rem;
+
+      --font-weight-normal: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+
+      --line-height-tight: 1.25;
+      --line-height-normal: 1.5;
+      --line-height-relaxed: 1.625;
+
+      /* Spacing Scale */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+
+      /* Border Radius */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+      /* Transitions */
+      --transition-fast: 150ms ease-in-out;
+      --transition-normal: 250ms ease-in-out;
+      --transition-slow: 350ms ease-in-out;
+    }
+
+    /* Reset and Base Styles */
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: system-ui, sans-serif;
-      background: #f9fafb;
-      color: #111827;
+      font-family: var(--font-family-base);
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-normal);
+      color: var(--gray-800);
+      background: linear-gradient(135deg, var(--primary-50) 0%, var(--gray-50) 100%);
       margin: 0;
-      padding: 16px;
+      padding: var(--space-4);
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      min-height: 100vh;
+      overflow-x: hidden;
     }
+
+    /* Container Styles */
     .container {
       background: white;
-      border-radius: 8px;
-      padding: 32px;
-      max-width: 700px;
+      border-radius: var(--radius-xl);
+      padding: var(--space-8);
+      max-width: 48rem;
       width: 100%;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-      margin-top: 40px;
+      box-shadow: var(--shadow-lg);
+      margin-top: var(--space-8);
+      border: 1px solid var(--primary-100);
+      position: relative;
+      overflow: hidden;
     }
-    h1 { text-align: center; color: #4f46e5; }
-    label { font-weight: 600; margin-bottom: 4px; display: block; }
-    input[type="text"], input[type="email"], input[type="password"], textarea {
-      width: 100%; padding: 10px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 16px; font-size: 1rem;
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-500) 0%, var(--secondary-500) 100%);
     }
-    .keyboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 8px; margin-bottom: 16px; }
-    .keyboard button { padding: 8px; font-size: 1rem; background-color: #e0e7ff; border: 1px solid #4f46e5; border-radius: 8px; cursor: pointer; transition: background-color 0.2s; }
-    .keyboard button:hover { background-color: #c7d2fe; }
-    button { width: 100%; padding: 12px; font-size: 1rem; background-color: #4f46e5; color: white; border: none; border-radius: 8px; cursor: pointer; margin-bottom: 12px; transition: background-color 0.2s; }
-    button:hover { background-color: #4338ca; }
-    #statusMsg, #authStatusMsg, #answerStatusMsg { text-align: center; margin-top: 16px; font-weight: 500; color: #4f46e5; }
-    ul#questionList { list-style: none; padding: 0; margin-bottom: 16px; }
-    ul#questionList li { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 12px; cursor: pointer; }
-    ul#questionList li.selected { background-color: #eef2ff; border-color: #c7d2fe; }
+
+    /* Typography */
+    h1 {
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--primary-700);
+      text-align: center;
+      margin: 0 0 var(--space-8) 0;
+      line-height: var(--line-height-tight);
+      position: relative;
+    }
+
+    h2 {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--gray-700);
+      margin: var(--space-6) 0 var(--space-4) 0;
+      line-height: var(--line-height-tight);
+    }
+
+    /* Form Styles */
+    label {
+      display: block;
+      font-weight: var(--font-weight-medium);
+      font-size: var(--font-size-sm);
+      color: var(--gray-700);
+      margin-bottom: var(--space-2);
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+    }
+
+    input[type="text"], 
+    input[type="email"], 
+    input[type="password"], 
+    input[type="file"], 
+    textarea {
+      width: 100%;
+      padding: var(--space-3) var(--space-4);
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-base);
+      font-family: var(--font-family-base);
+      color: var(--gray-800);
+      background: white;
+      transition: all var(--transition-fast);
+      margin-bottom: var(--space-4);
+    }
+
+    input:focus, 
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-500);
+      box-shadow: 0 0 0 3px var(--primary-100);
+      transform: translateY(-1px);
+    }
+
+    input:hover,
+    textarea:hover {
+      border-color: var(--gray-300);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: var(--font-family-mono);
+      font-size: var(--font-size-sm);
+    }
+
+    /* Button Styles */
+    button {
+      width: 100%;
+      padding: var(--space-3) var(--space-6);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      font-family: var(--font-family-base);
+      background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      margin-bottom: var(--space-3);
+      transition: all var(--transition-fast);
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+      transition: left var(--transition-normal);
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: var(--shadow-sm);
+    }
+
+    button:disabled {
+      background: var(--gray-300);
+      color: var(--gray-500);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Secondary Button Variant */
+    .button-secondary {
+      background: white !important;
+      color: var(--primary-700) !important;
+      border: 2px solid var(--primary-500) !important;
+    }
+
+    .button-secondary:hover {
+      background: var(--primary-50) !important;
+      border-color: var(--primary-600) !important;
+    }
+
+    /* Math Keyboard Styles */
+    .keyboard {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      margin-bottom: var(--space-6);
+      padding: var(--space-4);
+      background: var(--gray-50);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+    }
+
+    .keyboard button {
+      flex: 0 0 auto;
+      padding: var(--space-3) var(--space-4);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-medium);
+      background: white;
+      color: var(--primary-700);
+      border: 2px solid var(--primary-200);
+      border-radius: var(--radius-md);
+      margin: 0;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+      font-family: var(--font-family-mono);
+    }
+
+    .keyboard button:hover {
+      background: var(--primary-100);
+      border-color: var(--primary-400);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .keyboard button:active {
+      transform: scale(0.95);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Status Messages */
+    #statusMsg, #authStatusMsg, #answerStatusMsg, #lessonStatusMsg {
+      text-align: center;
+      margin-top: var(--space-4);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      font-weight: var(--font-weight-medium);
+      font-size: var(--font-size-sm);
+    }
+
+    .status-success {
+      background: var(--success-50);
+      color: var(--success-600);
+      border: 1px solid var(--success-200);
+    }
+
+    .status-error {
+      background: var(--error-50);
+      color: var(--error-600);
+      border: 1px solid var(--error-200);
+    }
+
+    .status-info {
+      background: var(--primary-50);
+      color: var(--primary-600);
+      border: 1px solid var(--primary-200);
+    }
+
+    /* Question List Styles */
+    ul#questionList {
+      list-style: none;
+      padding: 0;
+      margin-bottom: var(--space-4);
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    ul#questionList li {
+      background: white;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    ul#questionList li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--primary-500);
+      opacity: 0;
+      transition: opacity var(--transition-fast);
+    }
+
+    ul#questionList li:hover {
+      border-color: var(--primary-300);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    ul#questionList li:hover::before {
+      opacity: 1;
+    }
+
+    ul#questionList li.selected {
+      background: var(--primary-50);
+      border-color: var(--primary-400);
+      box-shadow: var(--shadow-lg);
+    }
+
+    ul#questionList li.selected::before {
+      opacity: 1;
+    }
+
+    /* Slide List Styles */
+    ul#slideList {
+      list-style: none;
+      padding: 0;
+      margin-bottom: var(--space-6);
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    ul#slideList li {
+      background: white;
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-fast);
+    }
+
+    ul#slideList li:hover {
+      border-color: var(--gray-300);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Rich Text Editor Styles */
+    .ql-container {
+      border: 2px solid var(--gray-200) !important;
+      border-radius: 0 0 var(--radius-md) var(--radius-md) !important;
+      font-family: var(--font-family-base) !important;
+      font-size: var(--font-size-base) !important;
+    }
+
+    .ql-toolbar {
+      border: 2px solid var(--gray-200) !important;
+      border-bottom: none !important;
+      border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+      background: var(--gray-50) !important;
+    }
+
+    .ql-editor {
+      min-height: 200px !important;
+      padding: var(--space-4) !important;
+    }
+
+    .ql-editor:focus {
+      outline: none !important;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: var(--space-2);
+      }
+
+      .container {
+        padding: var(--space-6);
+        margin-top: var(--space-4);
+        border-radius: var(--radius-lg);
+      }
+
+      h1 {
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--space-6);
+      }
+
+      button {
+        padding: var(--space-4) var(--space-6);
+        font-size: var(--font-size-base);
+      }
+
+      .keyboard {
+        padding: var(--space-3);
+        gap: var(--space-1);
+      }
+
+      .keyboard button {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--font-size-sm);
+        min-height: 44px;
+      }
+
+      /* Mobile responsive grids */
+      div[style*="grid-template-columns: 1fr 1fr"] {
+        display: block !important;
+      }
+
+      div[style*="display: flex"][style*="justify-content: space-between"] {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: var(--space-4) !important;
+      }
+
+      div[style*="display: flex"][style*="gap: var(--space-2)"] {
+        flex-wrap: wrap !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: var(--space-4);
+      }
+
+      h1 {
+        font-size: var(--font-size-xl);
+      }
+
+      ul#questionList li {
+        padding: var(--space-4);
+      }
+
+      /* Stack navigation buttons on very small screens */
+      div[style*="display: flex"][style*="gap: var(--space-2)"] button {
+        width: 100% !important;
+        margin-bottom: var(--space-2);
+      }
+    }
+
+    /* Accessibility Enhancements */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Focus Styles for Better Accessibility */
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--primary-400);
+      outline-offset: 2px;
+    }
+
+    /* High Contrast Mode Support */
+    @media (prefers-contrast: high) {
+      :root {
+        --gray-200: #666;
+        --gray-300: #444;
+        --primary-500: #0066cc;
+        --primary-600: #0052a3;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- AUTH VIEW -->
   <div class="container" id="authContainer">
-    <h1>Tutor Login</h1>
-    <label>Email</label>
-    <input type="email" id="email" placeholder="tutor@example.com" />
-    <label>Password</label>
-    <input type="password" id="password" placeholder="Enter your password" />
-    <button onclick="login()">Log In</button>
-    <button onclick="signUp()">Sign Up</button>
-    <button onclick="forgotPassword()">Forgot Password?</button>
-    <p id="authStatusMsg"></p>
+    <h1>🎓 QQuip Tutor Portal</h1>
+    <p style="text-align: center; color: var(--gray-600); margin-bottom: var(--space-8); font-size: var(--font-size-sm);">
+      Supporting nonverbal autism communication through interactive learning
+    </p>
+    <form id="authForm" onsubmit="return false;">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="tutor@example.com" required />
+      
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password" required />
+      
+      <button type="button" onclick="login()">Log In</button>
+      <button type="button" class="button-secondary" onclick="signUp()">Create New Account</button>
+      <button type="button" class="button-secondary" onclick="forgotPassword()">Reset Password</button>
+    </form>
+    <div id="authStatusMsg"></div>
   </div>
 
   <!-- STUDENT SUBMIT VIEW -->
   <div class="container" id="submitContainer" style="display:none">
-    <h1>Submit a Homework Question</h1>
-    <label for="studentId">Student ID</label>
-    <input type="text" id="studentId" placeholder="e.g., student123" />
-    <label for="titleInput">Problem Title</label>
-    <input type="text" id="titleInput" placeholder="e.g., Quadratic #1" />
-    <label for="problemText">Problem</label>
-    <textarea id="problemText" placeholder="e.g., x^2 + 3x + 2"></textarea>
-    <div class="keyboard" id="studentKeyboard"></div>
-    <button id="submitBtn">Send to Student</button>
-    <p id="statusMsg"></p>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+      <h1 style="margin: 0;">📝 Create Homework Problem</h1>
+      <button type="button" class="button-secondary" onclick="showDashboard()" style="width: auto; padding: var(--space-2) var(--space-4); font-size: var(--font-size-sm);">
+        ← Back to Dashboard
+      </button>
+    </div>
+    
+    <form id="problemForm" onsubmit="return false;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4);">
+        <div>
+          <label for="studentId">Student ID</label>
+          <input type="text" id="studentId" placeholder="e.g., student123" required />
+        </div>
+        <div>
+          <label for="titleInput">Problem Title</label>
+          <input type="text" id="titleInput" placeholder="e.g., Quadratic Equation #1" required />
+        </div>
+      </div>
+      
+      <label for="problemText">Problem Description</label>
+      <textarea id="problemText" placeholder="Enter the mathematical problem here, e.g., x² + 3x + 2 = 0" required></textarea>
+      
+      <label>Math Keyboard</label>
+      <div class="keyboard" id="studentKeyboard"></div>
+      
+      <button type="button" id="submitBtn">📤 Send to Student</button>
+    </form>
+    <div id="statusMsg"></div>
   </div>
 
   <!-- TUTOR DASHBOARD VIEW -->
   <div class="container" id="dashboardContainer" style="display:none">
-    <h1>Tutor Dashboard</h1>
-    <ul id="questionList"></ul>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+      <div>
+        <h1 style="margin: 0;">📊 Tutor Dashboard</h1>
+        <p style="color: var(--gray-600); margin: var(--space-2) 0 0 0; font-size: var(--font-size-sm);">
+          Manage homework problems and create interactive lessons
+        </p>
+      </div>
+      <div style="display: flex; gap: var(--space-2);">
+        <button type="button" onclick="showProblemCreator()" style="width: auto; padding: var(--space-2) var(--space-4); font-size: var(--font-size-sm);">
+          ➕ New Problem
+        </button>
+        <button type="button" onclick="logout()" class="button-secondary" style="width: auto; padding: var(--space-2) var(--space-4); font-size: var(--font-size-sm);">
+          🚪 Logout
+        </button>
+      </div>
+    </div>
+    
+    <div id="problemsSection">
+      <h2 style="display: flex; align-items: center; gap: var(--space-2);">
+        📚 Student Problems 
+        <span id="problemCount" style="background: var(--primary-100); color: var(--primary-700); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);">0</span>
+      </h2>
+      <ul id="questionList"></ul>
+    </div>
   </div>
 
+  <!-- LESSON CREATOR VIEW -->
+  <div class="container" id="slideCreatorContainer" style="display:none">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+      <h1 style="margin: 0;">🎨 Create Interactive Lesson</h1>
+      <button type="button" class="button-secondary" onclick="showDashboard()" style="width: auto; padding: var(--space-2) var(--space-4); font-size: var(--font-size-sm);">
+        ← Back to Dashboard
+      </button>
+    </div>
+
+    <form id="lessonForm" onsubmit="return false;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-6);">
+        <div>
+          <label for="lessonStudentId">Student ID</label>
+          <input type="text" id="lessonStudentId" placeholder="e.g. student123" required />
+        </div>
+        <div>
+          <label for="lessonTitle">Lesson Title</label>
+          <input type="text" id="lessonTitle" placeholder="e.g. Algebra Fundamentals" required />
+        </div>
+      </div>
+      
+      <div style="background: var(--gray-50); padding: var(--space-6); border-radius: var(--radius-lg); margin-bottom: var(--space-6); border: 2px solid var(--gray-200);">
+        <h2 style="margin-top: 0; color: var(--gray-700);">📝 Create Slide Content</h2>
+        
+        <label>Slide Text Content</label>
+        <div id="editor" style="height: 200px; margin-bottom: var(--space-4);"></div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4);">
+          <div>
+            <label for="imageUpload">Add Image (Optional)</label>
+            <input type="file" id="imageUpload" accept="image/*" />
+            <small style="color: var(--gray-600); font-size: var(--font-size-xs); display: block; margin-top: var(--space-1);">
+              JPG, PNG, or GIF format
+            </small>
+          </div>
+          <div>
+            <label for="pdfUpload">Upload Lesson PDF</label>
+            <input type="file" id="pdfUpload" accept="application/pdf" />
+            <small style="color: var(--gray-600); font-size: var(--font-size-xs); display: block; margin-top: var(--space-1);">
+              Complete lesson materials (LaTeX rendered)
+            </small>
+          </div>
+        </div>
+        
+        <button type="button" id="addSlideBtn">➕ Add This Slide</button>
+      </div>
+    </form>
+
+    <div id="slidesPreviewSection">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+        <h2 style="margin: 0; display: flex; align-items: center; gap: var(--space-2);">
+          🎬 Lesson Preview 
+          <span id="slideCount" style="background: var(--secondary-100); color: var(--secondary-700); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);">0 slides</span>
+        </h2>
+        <button type="button" id="publishLessonBtn" style="width: auto; padding: var(--space-3) var(--space-6);">
+          🚀 Publish Lesson & Generate Quiz
+        </button>
+      </div>
+      
+      <ul id="slideList"></ul>
+      <div id="lessonStatusMsg"></div>
+    </div>
+  </div>
   <script type="module" src="submit.js"></script>
 </body>
 </html>

@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://qquip-21c6e.web.app"],
+    "method": ["GET","POST","PUT","DELETE"],
+    "responseHeader": ["Content-Type","Authorization"],
+    "maxAgeSeconds": 3600
+  }
+]
